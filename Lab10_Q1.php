@@ -214,29 +214,39 @@ if(isset($_POST['showValue']))
       echo "<br> Connected to database successfully <br>";
    }
 
- $cmd="SELECT ProductCode,ProductName,ProductPrice from producttable";
+ $cmd="SELECT ProductCode,ProductName,ProductPrice,YearOfPurchase,ExpiryDate,Department from producttable";
 
 
  $inst=mysqli_query($conn,$cmd);
 
- 
-
- if(!$inst)
- {
-   echo "Could not fetch the records: ".mysqli_error($conn);
- }
- else{
-   while($row=mysqli_fetch_array($inst,MYSQLI_ASSOC))
-   {
-      echo "PRODUCT CODE :{$row['ProductCode']}  <br> ".
-      "PRODUCT NAME : {$row['ProductName']} <br> ".
-      "PRODUCT PRICE : {$row['ProductPrice']} <br> ".
-      "YEAR OF PURCHASE : {$row['YearOfPurchase']} <br> ".
-      "EXPIRY DATE: {$row['ExpiryDate']} <br> ".
-      "DEPARTMENT : {$row['Department']} <br> ".
-      "--------------------------------<br>";
+ if($result = mysqli_query($conn, $cmd)){
+   if(mysqli_num_rows($result) > 0){
+       echo "<table>";
+           echo "<tr>";
+               echo "<th>Product Code</th>";
+               echo "<th>Product Name</th>";
+               echo "<th>Product Price</th>";
+               echo "<th>Year of Purchase</th>";
+               echo "<th>Expiry Date</th>";
+               echo "<th>Department</th>";
+           echo "</tr>";
+       while($row = mysqli_fetch_array($result)){
+           echo "<tr>";
+               echo "<td>" . $row['ProductCode'] . "</td>";
+               echo "<td>" . $row['ProductName'] . "</td>";
+               echo "<td>" . $row['ProductPrice'] . "</td>";
+               echo "<td>" . $row['YearOfPurchase'] . "</td>";
+               echo "<td>" . $row['ExpiryDate'] . "</td>";
+               echo "<td>" . $row['Department'] . "</td>";
+           echo "</tr>";
+       }
+       echo "</table>";
+       // Close result set
+       mysqli_free_result($result);
+   } else{
+       echo "No records matching your query were found.";
    }
- }
+}
 
     
 }
@@ -265,22 +275,35 @@ if(isset($_POST['fetchId']))
 
    $inst=mysqli_query($conn,$cmd);
 
-   if(!$inst)
-   {
-      die("Could not fetch the Product");
-   }
-  else{
-   while($row=mysqli_fetch_array($inst,MYSQLI_ASSOC))
-   {
-      echo "PRODUCT CODE :{$row['ProductCode']}  <br> ".
-      "PRODUCT NAME : {$row['ProductName']} <br> ".
-      "PRODUCT PRICE : {$row['ProductPrice']} <br> ".
-      "YEAR OF PURCHASE : {$row['YearOfPurchase']} <br> ".
-      "EXPIRY DATE: {$row['ExpiryDate']} <br> ".
-      "DEPARTMENT : {$row['Department']} <br> ".
-      "--------------------------------<br>";
-   }
+   if($result = mysqli_query($conn, $cmd)){
+      if(mysqli_num_rows($result) > 0){
+          echo "<table>";
+              echo "<tr>";
+                  echo "<th>Product Code</th>";
+                  echo "<th>Product Name</th>";
+                  echo "<th>Product Price</th>";
+                  echo "<th>Year of Purchase</th>";
+                  echo "<th>Expiry Date</th>";
+                  echo "<th>Department</th>";
+              echo "</tr>";
+          while($row = mysqli_fetch_array($result)){
+              echo "<tr>";
+                  echo "<td>" . $row['ProductCode'] . "</td>";
+                  echo "<td>" . $row['ProductName'] . "</td>";
+                  echo "<td>" . $row['ProductPrice'] . "</td>";
+                  echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                  echo "<td>" . $row['ExpiryDate'] . "</td>";
+                  echo "<td>" . $row['Department'] . "</td>";
+              echo "</tr>";
+          }
+          echo "</table>";
+          // Close result set
+          mysqli_free_result($result);
+      } else{
+          echo "No records matching your query were found.";
+      }
   }
+}
 
   // sort product by Id
 
@@ -290,7 +313,7 @@ if(isset($_POST['fetchId']))
       $username="root";
       $password="";
 
-      $conn=mysqli_connect($server,$username,$password);
+      $conn=mysqli_connect($server,$username,$password,"productdb");
 
       if(!$conn)
       {
@@ -300,11 +323,36 @@ if(isset($_POST['fetchId']))
          echo "Connected successfully";
       }
 
-      $query="SELECT * FROM "
+      $query="SELECT * FROM  producttable ORDER BY ProductCode";
 
-
-  }
-
+      if($result = mysqli_query($conn, $query)){
+         if(mysqli_num_rows($result) > 0){
+             echo "<table>";
+                 echo "<tr>";
+                     echo "<th>Product Code</th>";
+                     echo "<th>Product Name</th>";
+                     echo "<th>Product Price</th>";
+                     echo "<th>Year of Purchase</th>";
+                     echo "<th>Expiry Date</th>";
+                     echo "<th>Department</th>";
+                 echo "</tr>";
+             while($row = mysqli_fetch_array($result)){
+                 echo "<tr>";
+                     echo "<td>" . $row['ProductCode'] . "</td>";
+                     echo "<td>" . $row['ProductName'] . "</td>";
+                     echo "<td>" . $row['ProductPrice'] . "</td>";
+                     echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                     echo "<td>" . $row['ExpiryDate'] . "</td>";
+                     echo "<td>" . $row['Department'] . "</td>";
+                 echo "</tr>";
+             }
+             echo "</table>";
+             // Close result set
+             mysqli_free_result($result);
+         } else{
+             echo "No records matching your query were found.";
+         }
+     }
 
   
 }
