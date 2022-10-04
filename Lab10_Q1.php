@@ -81,6 +81,23 @@ Fetch Record By Id: <input type="submit" name="fetchId" value="Fetch Product"><b
 <br><br>
 <input type="submit" name="countDept" value="Count Product in each dept">
 
+<br><br>
+<input type="submit" name="firstTwo" value="Fetch first 2 Details">
+
+<br><br>
+<input type="submit" name="startA" value="Fetch Product starts with a">
+
+<br><br>
+<input type="submit" name="endR" value="Fetch Product end with r">
+
+<br><br>
+<input type="submit" name="endR" value="Fetch Product end with r">
+
+<br><br>
+<input type="submit" name="dEndA" value="Fetch Product which does not start with A">
+
+<br><br>
+<input type="submit" name="rm" value="Remove Expired Products">
 
 </form>
 
@@ -505,7 +522,292 @@ if(isset($_POST['fetchId']))
         }
     }
 
+    // 9. Fetch and display the first 2 products
+
+    if(isset($_POST["firstTwo"]))
+    {
+        $server="localhost:3306";
+        $username="root";
+        $password="";
+
+        $conn=mysqli_connect($server,$username,$password,"productdb");
+
+
+        if(!$conn)
+        {
+            die("Could not connect to server");
+        }
+        else{
+            echo "<br> Connection to db successful <br>";
+        }
+
+        $cmd="SELECT * FROM producttable LIMIT 2";
+
+        
+        if($result = mysqli_query($conn, $cmd)){
+            if(mysqli_num_rows($result) > 0){
+                echo "<table>";
+                    echo "<tr>";
+                        echo "<th>Product Code</th>";
+                        echo "<th>Product Name</th>";
+                        echo "<th>Product Price</th>";
+                        echo "<th>Year of Purchase</th>";
+                        echo "<th>Expiry Date</th>";
+                        echo "<th>Department</th>";
+                    echo "</tr>";
+                while($row = mysqli_fetch_array($result)){
+                    echo "<tr>";
+                        echo "<td>" . $row['ProductCode'] . "</td>";
+                        echo "<td>" . $row['ProductName'] . "</td>";
+                        echo "<td>" . $row['ProductPrice'] . "</td>";
+                        echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                        echo "<td>" . $row['ExpiryDate'] . "</td>";
+                        echo "<td>" . $row['Department'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                // Close result set
+                mysqli_free_result($result);
+            } else{
+                echo "No records matching your query were found.";
+            }
+
+    }
+
+    }
+
+    // 10. fetch and display all the products with the products name starts with 'a'
+
+    if(isset($_POST["startA"]))
+    {
+        $server="localhost:3306";
+        $username="root";
+        $password="";
+
+        $conn=mysqli_connect($server,$username,$password,"productdb");
+
+
+        if(!$conn)
+        {
+            die("Could not connect to server");
+        }
+        else{
+            echo "<br> Connection to db successful <br>";
+        }
+
+        $cmd="SELECT * from producttable where ProductName LIKE 'A%'";
+
+          
+        if($result = mysqli_query($conn, $cmd)){
+            if(mysqli_num_rows($result) > 0){
+                echo "<table>";
+                    echo "<tr>";
+                        echo "<th>Product Code</th>";
+                        echo "<th>Product Name</th>";
+                        echo "<th>Product Price</th>";
+                        echo "<th>Year of Purchase</th>";
+                        echo "<th>Expiry Date</th>";
+                        echo "<th>Department</th>";
+                    echo "</tr>";
+                while($row = mysqli_fetch_array($result)){
+                    echo "<tr>";
+                        echo "<td>" . $row['ProductCode'] . "</td>";
+                        echo "<td>" . $row['ProductName'] . "</td>";
+                        echo "<td>" . $row['ProductPrice'] . "</td>";
+                        echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                        echo "<td>" . $row['ExpiryDate'] . "</td>";
+                        echo "<td>" . $row['Department'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                // Close result set
+                mysqli_free_result($result);
+            } else{
+                echo "No records matching your query were found.";
+            }
+
+    }
+    }
+
+// // 11. fetch and display all the products with the products ends with 'r'
+
+if(isset($_POST["endR"]))
+    {
+        $server="localhost:3306";
+        $username="root";
+        $password="";
+
+        $conn=mysqli_connect($server,$username,$password,"productdb");
+
+
+        if(!$conn)
+        {
+            die("Could not connect to server");
+        }
+        else{
+            echo "<br> Connection to db successful <br>";
+        }
+
+        $cmd="SELECT * from producttable where ProductName LIKE '%r'";
+
+          
+        if($result = mysqli_query($conn, $cmd)){
+            if(mysqli_num_rows($result) > 0){
+                echo "<table>";
+                    echo "<tr>";
+                        echo "<th>Product Code</th>";
+                        echo "<th>Product Name</th>";
+                        echo "<th>Product Price</th>";
+                        echo "<th>Year of Purchase</th>";
+                        echo "<th>Expiry Date</th>";
+                        echo "<th>Department</th>";
+                    echo "</tr>";
+                while($row = mysqli_fetch_array($result)){
+                    echo "<tr>";
+                        echo "<td>" . $row['ProductCode'] . "</td>";
+                        echo "<td>" . $row['ProductName'] . "</td>";
+                        echo "<td>" . $row['ProductPrice'] . "</td>";
+                        echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                        echo "<td>" . $row['ExpiryDate'] . "</td>";
+                        echo "<td>" . $row['Department'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                // Close result set
+                mysqli_free_result($result);
+            } else{
+                echo "No records matching your query were found.";
+            }
+
+    }
+    }
+
+    // 12. fetch and display all the products with the product name which does not starts with 'a'
+    if(isset($_POST["dEndA"]))
+    {
+        $server="localhost:3306";
+        $username="root";
+        $password="";
+
+        $conn=mysqli_connect($server,$username,$password,"productdb");
+
+
+        if(!$conn)
+        {
+            die("Could not connect to server");
+        }
+        else{
+            echo "<br> Connection to db successful <br>";
+        }
+
+        $cmd="SELECT * from producttable where ProductName NOT LIKE 'A%'";
+
+          
+        if($result = mysqli_query($conn, $cmd)){
+            if(mysqli_num_rows($result) > 0){
+                echo "<table>";
+                    echo "<tr>";
+                        echo "<th>Product Code</th>";
+                        echo "<th>Product Name</th>";
+                        echo "<th>Product Price</th>";
+                        echo "<th>Year of Purchase</th>";
+                        echo "<th>Expiry Date</th>";
+                        echo "<th>Department</th>";
+                    echo "</tr>";
+                while($row = mysqli_fetch_array($result)){
+                    echo "<tr>";
+                        echo "<td>" . $row['ProductCode'] . "</td>";
+                        echo "<td>" . $row['ProductName'] . "</td>";
+                        echo "<td>" . $row['ProductPrice'] . "</td>";
+                        echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                        echo "<td>" . $row['ExpiryDate'] . "</td>";
+                        echo "<td>" . $row['Department'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                // Close result set
+                mysqli_free_result($result);
+            } else{
+                echo "No records matching your query were found.";
+            }
+
+    }
+    }
+
     
+// // 13. Remove the expired date product from the database and display
+   if(isset($_POST["dEndA"]))
+    {
+        $server="localhost:3306";
+        $username="root";
+        $password="";
+
+        $date = date_parse(date('d-m-y h:i:s'));
+
+        $conn=mysqli_connect($server,$username,$password,"productdb");
+
+
+        if(!$conn)
+        {
+            die("Could not connect to server");
+        }
+        else{
+            echo "<br> Connection to db successful <br>";
+        }
+
+        $cmd="DELETE FROM producttable where ExpiryDate<'$date'";
+
+        $res=mysqli_query($conn,$cmd);
+
+        if($res)
+        {
+            echo "<br>Expired products deleted successfully<br>";
+        }
+        else{
+            echo "<br>Error deleting record<br>";
+        }
+
+     echo "<br>After deleing records<br>";
+
+     $cmd="SELECT * from producttable";
+
+          
+     if($result = mysqli_query($conn, $cmd)){
+         if(mysqli_num_rows($result) > 0){
+             echo "<table>";
+                 echo "<tr>";
+                     echo "<th>Product Code</th>";
+                     echo "<th>Product Name</th>";
+                     echo "<th>Product Price</th>";
+                     echo "<th>Year of Purchase</th>";
+                     echo "<th>Expiry Date</th>";
+                     echo "<th>Department</th>";
+                 echo "</tr>";
+             while($row = mysqli_fetch_array($result)){
+                 echo "<tr>";
+                     echo "<td>" . $row['ProductCode'] . "</td>";
+                     echo "<td>" . $row['ProductName'] . "</td>";
+                     echo "<td>" . $row['ProductPrice'] . "</td>";
+                     echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                     echo "<td>" . $row['ExpiryDate'] . "</td>";
+                     echo "<td>" . $row['Department'] . "</td>";
+                 echo "</tr>";
+             }
+             echo "</table>";
+             // Close result set
+             mysqli_free_result($result);
+         } else{
+             echo "No records matching your query were found.";
+         }
+
+
+        
+    }
+}
+
+
+
+
 
 ?>
 
