@@ -66,9 +66,20 @@ Fetch Record By Id: <input type="submit" name="fetchId" value="Fetch Product"><b
 
 
 <!-- Sort the data by product Id -->
-<input type="submit" name="SortProduct" value="Sort Products">
+<input type="submit" name="SortProduct" value="Sort Products"><br><br>
+
+<!-- // 6. Retrive and display the records of the particular product from database in a table form by inputting either product code or name of the product -->
+
+<input type="text" name="searchCodeP"><br><br>
+<input type="submit" name="scp" value="Search By Code or Name">
 
 
+<!-- // 7. sort the records based on product name -->
+<br><br>
+<input type="submit" name="sortName" value="Sort Product by Name">
+
+<br><br>
+<input type="submit" name="countDept" value="Count Product in each dept">
 
 
 </form>
@@ -353,9 +364,148 @@ if(isset($_POST['fetchId']))
              echo "No records matching your query were found.";
          }
      }
+    }
 
+
+     // search a product by id or name
+
+     if(isset($_POST["scp"]))
+     {
+        $val=$_POST["searchCodeP"];
+
+        $server="localhost:3306";
+        $username="root";
+        $password="";
+
+        $conn=mysqli_connect($server,$username,$password,"productdb");
+
+        if(!$conn)
+        {
+            die("Could not connect to server");
+        }
+        else{
+            echo "<br> Connection to db successful <br>";
+        }
+
+        $cmd="SELECT * from producttable where ProductCode='$val' or ProductName='$val'";
+
+
+        if($result = mysqli_query($conn, $cmd)){
+            if(mysqli_num_rows($result) > 0){
+                echo "<table>";
+                    echo "<tr>";
+                        echo "<th>Product Code</th>";
+                        echo "<th>Product Name</th>";
+                        echo "<th>Product Price</th>";
+                        echo "<th>Year of Purchase</th>";
+                        echo "<th>Expiry Date</th>";
+                        echo "<th>Department</th>";
+                    echo "</tr>";
+                while($row = mysqli_fetch_array($result)){
+                    echo "<tr>";
+                        echo "<td>" . $row['ProductCode'] . "</td>";
+                        echo "<td>" . $row['ProductName'] . "</td>";
+                        echo "<td>" . $row['ProductPrice'] . "</td>";
+                        echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                        echo "<td>" . $row['ExpiryDate'] . "</td>";
+                        echo "<td>" . $row['Department'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                // Close result set
+                mysqli_free_result($result);
+            } else{
+                echo "No records matching your query were found.";
+            }
+
+
+     }
+    }
   
-}
+    // 7. sort the records based on product name
+
+    if(isset($_POST["sortName"]))
+    {
+        $server="localhost:3306";
+        $username="root";
+        $password="";
+
+        $conn=mysqli_connect($server,$username,$password,"productdb");
+
+        if(!$conn)
+        {
+            die("Could not connect to server");
+        }
+        else{
+            echo "<br> Connection to db successful <br>";
+        }
+      
+        $cmd="SELECT * FROM producttable order by ProductName";
+
+       
+        if($result = mysqli_query($conn, $cmd)){
+            if(mysqli_num_rows($result) > 0){
+                echo "<table>";
+                    echo "<tr>";
+                        echo "<th>Product Code</th>";
+                        echo "<th>Product Name</th>";
+                        echo "<th>Product Price</th>";
+                        echo "<th>Year of Purchase</th>";
+                        echo "<th>Expiry Date</th>";
+                        echo "<th>Department</th>";
+                    echo "</tr>";
+                while($row = mysqli_fetch_array($result)){
+                    echo "<tr>";
+                        echo "<td>" . $row['ProductCode'] . "</td>";
+                        echo "<td>" . $row['ProductName'] . "</td>";
+                        echo "<td>" . $row['ProductPrice'] . "</td>";
+                        echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                        echo "<td>" . $row['ExpiryDate'] . "</td>";
+                        echo "<td>" . $row['Department'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                // Close result set
+                mysqli_free_result($result);
+            } else{
+                echo "No records matching your query were found.";
+            }
+
+        }
+    }
+
+    // 8. count number of products in each department (give same department name for 2 products while insert)
+    // check
+
+
+    if(isset($_POST["countDept"]))
+    {
+        $server="localhost:3306";
+        $username="root";
+        $password="";
+
+        $conn=mysqli_connect($server,$username,$password,"productdb");
+
+        if(!$conn)
+        {
+            die("Could not connect to server");
+        }
+        else{
+            echo "<br> Connection to db successful <br>";
+        }
+
+        $cmd = "SELECT Department,COUNT(ProductId) as NumberOfProducts from producttable GROUP BY Department";
+
+        $result=mysqli_query($conn,$cmd);
+
+
+        while($row = mysqli_fetch_array($result))
+        {
+             echo "<br>".$row['Department']." ---".$row['NumberOfProducts']."<br>";
+        }
+    }
+
+    
 
 ?>
 
