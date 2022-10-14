@@ -18,6 +18,17 @@
 <html>
 <head>
 
+<style>
+    form{
+        border:2px solid black;
+        margin-left:2rem;
+    }
+    .formDiv{
+        margin-left:2rem;
+        margin-bottom:2px;
+    }
+</style>
+
 </head>
 
 <body>
@@ -26,18 +37,24 @@
 
 <!-- Create database -->
 
-Database name:<input type="text" name="dbname"><br><br>
+<div class="formDiv">
+
+<h1>Store Management</h1>
+
+Database name:<input type="text" name="dbname">
  <input type="submit" name="createDatabase" value="create Database"><br><br>
 
 
  <!-- Create table -->
 
- Table name:<input type="text" name="tablename"><br><br>
+ Table name:<input type="text" name="tablename">
  <input type="submit" name="createTable" value="create Table"><br><br><br>
 
 
 
 <!-- Add  product -->
+
+<h2 style="color:red">Add Product</h2>
 
 Product code: <input type="text"  name="code">
 <br><br>
@@ -56,48 +73,73 @@ Department: <input type="text" name="dept">
 <input type="submit" name="insertRecord" value="Insert Record" ><br><br>
 
 
+<!-- Update the price of the particular product into the database -->
+<h2 style="color:red">Update Price of a Product</h2>
+Enter Product-Id: <input type="number" name="uid"><br><br>
+Enter updated Price: <input type="number" name="uprice"><br><br>
+<input type="submit" name="updatePrice" value="Update Price" ><br><br>
+
+<h2 style="color:red">Display Values</h2>
 <!-- Show all values -->
 
 See Records in Table: <input type='submit' name='showValue' value="Show Records"><br><br>
 
+<h2 style="color:red">Search using Product-Id</h2>
 <!--Display by Product Id -->
 Enter Product Id: <input type="number" name="pid"><br><br>
 Fetch Record By Id: <input type="submit" name="fetchId" value="Fetch Product"><br><br>
 
-
+<h2 style="color:red">Sort Products by Product-Id</h2>
 <!-- Sort the data by product Id -->
 <input type="submit" name="SortProduct" value="Sort Products"><br><br>
 
 <!-- // 6. Retrive and display the records of the particular product from database in a table form by inputting either product code or name of the product -->
-
-<input type="text" name="searchCodeP"><br><br>
+<h2 style="color:red">Search Product by name or code</h2>
+<input type="text" name="searchCodeP">
 <input type="submit" name="scp" value="Search By Code or Name">
 
 
 <!-- // 7. sort the records based on product name -->
 <br><br>
+<h2 style="color:red">Sort Product by name</h2>
 <input type="submit" name="sortName" value="Sort Product by Name">
 
-<br><br>
+
+<h2 style="color:red">Count Product in each department</h2>
+<br>
 <input type="submit" name="countDept" value="Count Product in each dept">
 
-<br><br>
+<h2 style="color:red">Fetch first 2 Details</h2>
+<br>
 <input type="submit" name="firstTwo" value="Fetch first 2 Details">
 
-<br><br>
+<h2 style="color:red">Fetch Products starts with a</h2>
+<br>
 <input type="submit" name="startA" value="Fetch Product starts with a">
 
-<br><br>
+<h2 style="color:red">Fetch Product end with r</h2>
+<br>
 <input type="submit" name="endR" value="Fetch Product end with r">
 
-<br><br>
-<input type="submit" name="endR" value="Fetch Product end with r">
 
-<br><br>
+<!-- <br><br>
+<input type="submit" name="endR" value="Fetch Product end with r"> -->
+
+<h2 style="color:red">Fetch Product which does not start with A</h2>
+<br>
 <input type="submit" name="dEndA" value="Fetch Product which does not start with A">
 
-<br><br>
+<h2 style="color:red">Remove Expired Products</h2>
+<br>
 <input type="submit" name="rm" value="Remove Expired Products">
+
+
+<h2 style="color:red">Filter Products</h2>
+Filter Products: <input type="text">
+<input type="submit" value="filterProduct">
+
+</div>
+
 
 </form>
 
@@ -168,7 +210,7 @@ if(isset($_POST["createTable"]))
 
    if(!$createDatabase)
    {
-      die("\nCould not create the database\n");
+      die("\nCould not create the table\n");
    }
    else{
       echo "\nTable ".$tableName."created successfully\n";
@@ -217,6 +259,45 @@ if(isset($_POST["insertRecord"]))
       echo "\nSuccessfully inserted record into table\n";
    }
 
+
+
+}
+
+// Update Price of Product
+
+if(isset($_POST['updatePrice']))
+{
+    $uid=$_POST["uid"];
+    $updatedPrice=$_POST["uprice"];
+
+    $server="localhost:3306";
+   $username="root";
+   $password="";
+
+   $conn=mysqli_connect($server,$username,$password,"productdb");
+
+   if(!$conn)
+   {
+      die("\nCould not connect\n");
+   }
+   else{
+      echo "\nConnected successfully\n";
+   }
+
+   $cmd="UPDATE producttable SET ProductPrice='$updatedPrice' where ProductId='$uid'";
+
+   $inst=mysqli_query($conn,$cmd);
+
+   if(!$inst)
+   {
+      die("\nCould not update the Price\n");
+   }
+   else{
+      echo "\nSuccessfully updated Price\n";
+   }
+
+
+
 }
 
 
@@ -242,14 +323,14 @@ if(isset($_POST['showValue']))
       echo "<br> Connected to database successfully <br>";
    }
 
- $cmd="SELECT ProductCode,ProductName,ProductPrice,YearOfPurchase,ExpiryDate,Department from producttable";
+ $cmd="SELECT * from producttable";
 
 
  $inst=mysqli_query($conn,$cmd);
 
  if($result = mysqli_query($conn, $cmd)){
    if(mysqli_num_rows($result) > 0){
-       echo "<table>";
+       echo "<table  border= 2px solid>";
            echo "<tr>";
                echo "<th>Product Code</th>";
                echo "<th>Product Name</th>";
@@ -305,7 +386,7 @@ if(isset($_POST['fetchId']))
 
    if($result = mysqli_query($conn, $cmd)){
       if(mysqli_num_rows($result) > 0){
-          echo "<table>";
+          echo "<table  border= 2px solid>";
               echo "<tr>";
                   echo "<th>Product Code</th>";
                   echo "<th>Product Name</th>";
@@ -355,7 +436,7 @@ if(isset($_POST['fetchId']))
 
       if($result = mysqli_query($conn, $query)){
          if(mysqli_num_rows($result) > 0){
-             echo "<table>";
+             echo "<table  border= 2px solid>";
                  echo "<tr>";
                      echo "<th>Product Code</th>";
                      echo "<th>Product Name</th>";
@@ -409,7 +490,7 @@ if(isset($_POST['fetchId']))
 
         if($result = mysqli_query($conn, $cmd)){
             if(mysqli_num_rows($result) > 0){
-                echo "<table>";
+                echo "<table  border= 2px solid>";
                     echo "<tr>";
                         echo "<th>Product Code</th>";
                         echo "<th>Product Name</th>";
@@ -462,7 +543,7 @@ if(isset($_POST['fetchId']))
        
         if($result = mysqli_query($conn, $cmd)){
             if(mysqli_num_rows($result) > 0){
-                echo "<table>";
+                echo "<table  border= 2px solid>";
                     echo "<tr>";
                         echo "<th>Product Code</th>";
                         echo "<th>Product Name</th>";
@@ -546,7 +627,7 @@ if(isset($_POST['fetchId']))
         
         if($result = mysqli_query($conn, $cmd)){
             if(mysqli_num_rows($result) > 0){
-                echo "<table>";
+                echo "<table  border= 2px solid>";
                     echo "<tr>";
                         echo "<th>Product Code</th>";
                         echo "<th>Product Name</th>";
@@ -600,7 +681,7 @@ if(isset($_POST['fetchId']))
           
         if($result = mysqli_query($conn, $cmd)){
             if(mysqli_num_rows($result) > 0){
-                echo "<table>";
+                echo "<table border= 2px solid>";
                     echo "<tr>";
                         echo "<th>Product Code</th>";
                         echo "<th>Product Name</th>";
@@ -653,7 +734,7 @@ if(isset($_POST["endR"]))
           
         if($result = mysqli_query($conn, $cmd)){
             if(mysqli_num_rows($result) > 0){
-                echo "<table>";
+                echo "<table  border= 2px solid>";
                     echo "<tr>";
                         echo "<th>Product Code</th>";
                         echo "<th>Product Name</th>";
@@ -705,7 +786,7 @@ if(isset($_POST["endR"]))
           
         if($result = mysqli_query($conn, $cmd)){
             if(mysqli_num_rows($result) > 0){
-                echo "<table>";
+                echo "<table  border= 2px solid>";
                     echo "<tr>";
                         echo "<th>Product Code</th>";
                         echo "<th>Product Name</th>";
@@ -736,13 +817,14 @@ if(isset($_POST["endR"]))
 
     
 // // 13. Remove the expired date product from the database and display
-   if(isset($_POST["dEndA"]))
+   if(isset($_POST["rm"]))
     {
         $server="localhost:3306";
         $username="root";
         $password="";
 
-        $date = date_parse(date('d-m-y h:i:s'));
+        $date_now=date("Y-m-d");
+        echo $date_now;
 
         $conn=mysqli_connect($server,$username,$password,"productdb");
 
@@ -755,7 +837,7 @@ if(isset($_POST["endR"]))
             echo "<br> Connection to db successful <br>";
         }
 
-        $cmd="DELETE FROM producttable where ExpiryDate<'$date'";
+        $cmd="DELETE FROM producttable where ExpiryDate<'$date_now'";
 
         $res=mysqli_query($conn,$cmd);
 
@@ -774,7 +856,7 @@ if(isset($_POST["endR"]))
           
      if($result = mysqli_query($conn, $cmd)){
          if(mysqli_num_rows($result) > 0){
-             echo "<table>";
+             echo "<table  border= 2px solid>";
                  echo "<tr>";
                      echo "<th>Product Code</th>";
                      echo "<th>Product Name</th>";
