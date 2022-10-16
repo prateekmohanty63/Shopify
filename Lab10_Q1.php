@@ -135,8 +135,8 @@ Fetch Record By Id: <input type="submit" name="fetchId" value="Fetch Product"><b
 
 
 <h2 style="color:red">Filter Products</h2>
-Filter Products: <input type="text">
-<input type="submit" value="filterProduct">
+Filter Products: <input type="text" name="fproduct">
+<input type="submit" value="filterProduct"  name="filterProduct">
 
 </div>
 
@@ -886,6 +886,80 @@ if(isset($_POST["endR"]))
         
     }
 }
+
+// 14. add filter options
+
+if(isset($_POST['filterProduct']))
+{
+    $filterName=$_POST['fproduct'];
+
+    $len=strlen($filterName);
+
+
+    $server="localhost:3306";
+    $username="root";
+    $password="";
+
+
+    $conn=mysqli_connect($server,$username,$password,"productdb");
+
+
+    if(!$conn)
+    {
+        die("Could not connect to server");
+    }
+    else{
+        echo "<br> Connection to db successful <br>";
+    }
+    echo $filterName;
+
+    $cmd="SELECT *
+    -- FROM producttable
+    -- WHERE Left(ProductName, '$len') ";
+    
+     $cmd="SELECT *
+     FROM producttable
+     WHERE ProductName LIKE '$filterName%' OR ProductName LIKE '%$filterName'  OR ProductName LIKE '%$filterName%'";
+
+  
+
+       if($result = mysqli_query($conn, $cmd)){
+        if(mysqli_num_rows($result) > 0){
+            echo "<table  border= 2px solid>";
+                echo "<tr>";
+                    echo "<th>Product Code</th>";
+                    echo "<th>Product Name</th>";
+                    echo "<th>Product Price</th>";
+                    echo "<th>Year of Purchase</th>";
+                    echo "<th>Expiry Date</th>";
+                    echo "<th>Department</th>";
+                echo "</tr>";
+            while($row = mysqli_fetch_array($result)){
+                echo "<tr>";
+                    echo "<td>" . $row['ProductCode'] . "</td>";
+                    echo "<td>" . $row['ProductName'] . "</td>";
+                    echo "<td>" . $row['ProductPrice'] . "</td>";
+                    echo "<td>" . $row['YearOfPurchase'] . "</td>";
+                    echo "<td>" . $row['ExpiryDate'] . "</td>";
+                    echo "<td>" . $row['Department'] . "</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
+            // Close result set
+            mysqli_free_result($result);
+        }
+        else{
+            echo "No records matching your query were found.";
+        }
+
+    }
+        
+
+       
+}
+
+
+
 
 
 
